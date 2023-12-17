@@ -141,7 +141,7 @@ finiteDLMauto(formula = y ~ x,
               model.type = "dlm", error.type = "AIC", trace = FALSE)
 ```
 
-Berdasarkan output tersebut, lag optimum didapatkan ketika lag=6. Selanjutnya dilakukan pemodelan untuk lag=6
+Berdasarkan output tersebut, lag optimum didapatkan ketika lag=5. Selanjutnya dilakukan pemodelan untuk lag=5
 
 ```{r}
 #model dlm dengan lag optimum
@@ -154,7 +154,7 @@ BIC(model.dlm2)
 Dari hasil tersebut terdapat  peubah yang berpengaruh signifikan terhadap taraf nyata 5% yaitu $x_t$. Adapun model yang terbentuk adalah
 
 $$
-\hat{Y_t}=7487.297+8.881 X_t+...-4.793_{t-6}
+\hat{Y_t}=7487.297+8.881 X_t+...-4.793_{t-5}
 $$
 
 Adapun hasil peramalan 26 periode kedepan menggunakan model tersebut adalah sebagai berikut
@@ -232,7 +232,7 @@ data.frame("q_optimum" = q_opt, "p_optimum" = p_opt,
            "AIC"=model.ardl.opt$min.Stat)
 ```
 
-Dari tabel di atas, dapat terlihat bahwa nilai AIC terendah didapat ketika $p=6$ dan $q=1$, yaitu sebesar `-20,56587`. Artinya, model autoregressive optimum didapat ketika $p=6$ dan $q=1$.
+Dari tabel di atas, dapat terlihat bahwa nilai AIC terendah didapat ketika $p=15$ dan $q=4$, yaitu sebesar `1995.236`. Artinya, model autoregressive optimum didapat ketika $p=15$ dan $q=4$.
 
 Selanjutnya dapat dilakukan pemodelan dengan nilai $p$ dan $q$ optimum seperti inisialisasi di langkah sebelumnya.
 
@@ -250,13 +250,13 @@ Untuk menentukan `formula` model yang akan digunakan, tersedia fungsi tambahan y
 
 ```{r}
 #sama dengan model dlm q=1
-cons_lm1 <- dynlm(y ~ x+L(y),data = train.ts)
+cons_lm1 <- dynlm(y ~ x+L(x),data = train.ts)
 #sama dengan model ardl p=1 q=0
 cons_lm2 <- dynlm(y ~ x+L(y),data = train.ts)
 #sama dengan ardl p=1 q=1
 cons_lm3 <- dynlm(y ~ x+L(x)+L(y),data = train.ts)
 #sama dengan dlm p=2
-cons_lm4 <- dynlm(y ~ x+L(x)+L(y,2),data = train.ts)
+cons_lm4 <- dynlm(y ~ x+L(x)+L(x,2),data = train.ts)
 ```
 
 ### Ringkasan Model
@@ -327,7 +327,7 @@ Berdasarkan nilai MAPE, model paling optimum didapat pada Model DLM 2 karena mem
 
 ```{r}
 par(mfrow=c(1,1))
-plot(test$x, test$y, type="b", col="black", ylim=c(1,200000))
+plot(test$x, test$y, type="b", col="black", ylim=c(1,173733))
 points(test$x, fore.koyck$forecasts,col="red")
 lines(test$x, fore.koyck$forecasts,col="red")
 points(test$x, fore.dlm$forecasts,col="blue")
